@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lector de Texto - WatsonPI & Programando Ideas</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body class="light-mode">
+
+    <nav class="navbar">
+        <ul>
+            <li><a href="index.html">Inicio</a></li>
+            <li><a href="videos.html">Ver Videos sin Ads</a></li>
+            <li><a href="lector.html" class="active">Lector de Texto</a></li>
+            <li><a href="acerca.html">Acerca de</a></li>
+        </ul>
+    </nav>
+    <!--
+    <button id="theme-toggle">Modo Oscuro</button>
+    -->
+    <div class="container">
+        <h1>Lector de Voz Avanzado</h1>
+        <label for="text-to-speak">Introduce el texto aquí:</label>
+        <textarea id="text-to-speak" placeholder="Escribe algo para que el lector de voz lo pronuncie..."></textarea>
+
+        <label for="voice-select">Selecciona una voz:</label>
+        <select id="voice-select"></select>
+
+        <div class="controls-group">
+            <label for="rate-slider">Velocidad de Lectura: <span id="rate-value" class="slider-value">1.0</span>x</label>
+            <input type="range" id="rate-slider" min="0.5" max="2" step="0.1" value="1.0">
+        </div>
+
+        <button id="play-button">Reproducir</button>
+        <button id="pause-button">Pausar</button>
+        <button id="stop-button">Detener</button>
+        <div class="theme-buttons">
+            <button onclick="setTheme('light')">Modo Claro ☀️</button>
+            <button onclick="setTheme('dark')">Modo Oscuro 🌙</button>
+        </div>
+    </div>
+
+<script>
+        const textToSpeakInput = document.getElementById('text-to-speak');
+        const playButton = document.getElementById('play-button');
+        const pauseButton = document.getElementById('pause-button');
+        const stopButton = document.getElementById('stop-button');
+        const voiceSelect = document.getElementById('voice-select');
+        const rateSlider = document.getElementById('rate-slider');
+        const rateValueSpan = document.getElementById('rate-value');
+        const themeToggleButton = document.getElementById('theme-toggle');
+
+        let synth = window.speechSynthesis;
+        let utterance = new SpeechSynthesisUtterance();
+        let voices = [];
+        let currentText = ''; // Almacenar el texto actual para reiniciar la reproducción
+
+        // Función para cargar las voces disponibles
+        function populateVoiceList() {
+            voices = synth.getVoices().sort((a, b) => {
+                const aname = a.name.toUpperCase();
+                const bname = b.name.toUpperCase();
+                if (aname < bname) return -1;
+                else if (aname == bname) return 0;
+                else return +1;
+            });
+
+            voiceSelect.innerHTML = ''; // Limpiar opciones existentes
+            voices.forEach((voice, index) => {
+                const option = document.createElement('option');
+                option.textContent = `${voice.name} (${voice.lang})`;
+                option.setAttribute('data-lang', voice.lang);
+                option.setAttribute('data-name', voice.name);
+                voiceSelect.appendChild(option);
+            });
+
+            // Establecer una voz por defecto (por ejemplo, la primera en español si existe)
+            const spanishVoice = voices.find(voice => voice.lang.startsWith('es'));
+            if (spanishVoice) {
+                voiceSelect.value = `${spanishVoice.name} (${spanishVoice.lang})`;
+            } else if (voices.length > 0) {
+                voiceSelect.value = `${voices[0].name} (${voices[0].lang})`;
+            }
+        }
+
+        // Cargar voces cuando estén disponibles
+        if (synth.onvoiceschanged !== undefined) {
+            synth.onvoiceschanged = populateVoiceList;
+        } else {
+            populateVoiceList(); // Para navegadores que no emiten el evento (menos común)
+        }
+
+        // Función para iniciar o reanudar la reproducción
+        function startSpeaking() {
+            if (synth.speaking && synth.paused) {
+                synth.resume();
+                return;
+            }
+
+            const text = textToSpeakInput.value.trim();
+            if (text === '') {
+                alert('Por favor, ingresa algún texto para reproducir.');
+                return;
+            }
+
+            // Si el texto ha cambiado o no hay una reproducción en curso, creamos una nueva
+            // O si la velocidad cambió y necesitamos reiniciar la voz
+            if (!synth.speaking || utterance.text !== text || utterance.rate !== parseFloat(rateSlider.value)) {
+                synth.cancel(); // Detener cualquier voz actual para aplicar nuevos ajustes
+                utterance = new SpeechSynthesisUtterance(text);
+                currentText = text; // Actualizar el texto almacenado
+            }
+
+            // Establecer la voz seleccionada
+            const selectedOptionName = voiceSelect.selectedOptions[0].getAttribute('data-name');
+            utterance.voice = voices.find(voice => voice.name === selectedOptionName);
+
+            // Establecer la velocidad de lectura
+            utterance.rate = parseFloat(rateSlider.value);
+
+            // Manejar el fin de la reproducción
+            utterance.onend = () => {
+                console.log('La reproducción de voz ha terminado.');
+            };
+
+            // Manejar errores
+            utterance.onerror = (event) => {
+                console.error('Error en la síntesis de voz:', event.error);
+            };
+
+            synth.speak(utterance);
+        }
+
+        // Event listener para el botón de Reproducir
+        playButton.addEventListener('click', startSpeaking);
+
+        // Event listener para el botón de Pausar
+        pauseButton.addEventListener('click', () => {
+            if (synth.speaking && !synth.paused) {
+                synth.pause();
+            }
+        });
+
+        // Event listener para el botón de Detener
+        stopButton.addEventListener('click', () => {
+            if (synth.speaking) {
+                synth.cancel();
+            }
+        });
+
+        // Event listener para el slider de velocidad
+        rateSlider.addEventListener('input', () => {
+            rateValueSpan.textContent = rateSlider.value;
+            // Si la voz está actualmente hablando y no está pausada, reinicia la reproducción
+            if (synth.speaking && !synth.paused) {
+                startSpeaking(); // Reinicia con la nueva velocidad
+            }
+        });
+
+        // Event listener para el botón de cambio de tema
+        themeToggleButton.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            if (document.body.classList.contains('dark-mode')) {
+                themeToggleButton.textContent = 'Modo Claro';
+            } else {
+                themeToggleButton.textContent = 'Modo Oscuro';
+            }
+        });
+
+        // Al cargar, verificar la preferencia de tema del usuario (opcional, pero buena práctica)
+        // Por simplicidad, aquí solo establecemos el modo inicial a "claro" y el botón a "Modo Oscuro"
+        // Si quieres guardar la preferencia del usuario, usa localStorage.
+    </script>
+
+    <script src="js/theme-switcher.js"></script>
+
+
+
+</body>
+</html>

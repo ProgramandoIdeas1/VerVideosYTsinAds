@@ -1,0 +1,519 @@
+/* Estilos Base */
+body {
+    font-family: 'Roboto', sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.page-container {
+    margin-top: 30px;
+    margin-bottom: 30px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+/* --- ESTILOS PARA LA BARRA DE NAVEGACIÓN (Navbar) --- */
+.navbar {
+    width: 100%;
+    background-color: #ffffff;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: background-color 0.3s ease;
+    z-index: 1000;
+}
+
+.navbar ul {
+    display: flex;
+    justify-content: center;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    flex-wrap: wrap;
+}
+
+.navbar li a {
+    display: block;
+    padding: 15px 20px;
+    text-decoration: none;
+    color: #34495e;
+    font-weight: 700;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.navbar li a:hover {
+    background-color: #f0f0f0;
+}
+
+.navbar li a.active {
+    color: #e62117;
+    border-bottom: 3px solid #e62117;
+    padding-bottom: 12px;
+}
+
+/* --- Contenedor Principal --- */
+.container {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 900px;
+    width: 100%;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+h1, h2 {
+    color: #2c3e50;
+    margin-bottom: 25px;
+    font-weight: 700;
+    transition: color 0.3s ease;
+}
+
+p {
+    transition: color 0.3s ease;
+    line-height: 1.6;
+}
+
+/* --- Estilos para la página de INICIO --- */
+.hero {
+    width: 100%;
+    height: 60vh;
+    background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://via.placeholder.com/1920x1080.png?text=CAMBIA+ESTA+IMAGEN');
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+}
+.hero-content {
+    /* Añade o ajusta estas propiedades para centrar el contenido */
+    display: flex; /* Convierte el hero-content en un contenedor flex */
+    flex-direction: column; /* Apila los elementos hijos verticalmente */
+    justify-content: center; /* Centra los elementos hijos verticalmente en el contenedor flex */
+    align-items: center; /* Centra los elementos hijos horizontalmente en el contenedor flex */
+    width: 100%; /* Asegura que ocupe todo el ancho disponible */
+    max-width: 900px; /* Puedes ajustar este valor si quieres un ancho máximo para el contenido */
+    margin: 0 auto; /* Centra el propio hero-content si tiene un max-width */
+}
+.hero-content h1 {
+    font-size: 3.5rem;
+    color: white;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+.hero-content p {
+    font-size: 1.2rem;
+    max-width: 600px;
+    text-align: center;
+}
+.cta-button {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 12px 30px;
+    background-color: #e62117;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
+.cta-button:hover {
+    background-color: #cc180c;
+    transform: scale(1.05);
+}
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+    margin-top: 40px;
+}
+.feature-card {
+    background-color: #f9f9f9;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    transition: transform 0.3s ease;
+}
+.feature-card:hover {
+    transform: translateY(-10px);
+}
+.feature-card img {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 15px;
+}
+.feature-card h3 {
+    color: #2c3e50;
+}
+.feature-card a {
+    display: inline-block;
+    margin-top: 15px;
+    color: #e62117;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+/* --- Estilos para la página de VIDEOS --- */
+.input-group {
+    margin-bottom: 25px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+}
+
+#youtubeUrl {
+    flex-grow: 1;
+    padding: 12px 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+    max-width: 500px;
+    min-width: 250px;
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+button {
+    padding: 12px 25px;
+    background-color: #e62117;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease, color 0.3s ease;
+}
+button:hover {
+    background-color: #cc180c;
+    transform: translateY(-2px);
+}
+
+.video-wrapper {
+    margin-top: 30px;
+    background-color: #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
+    display: none;
+    transition: background-color 0.3s ease;
+}
+
+.responsive-iframe-container {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 */
+    height: 0;
+    overflow: hidden;
+}
+
+.responsive-iframe-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
+
+.error-message {
+    color: #e62117;
+    margin-top: 15px;
+    font-weight: bold;
+    display: none;
+}
+
+.theme-buttons {
+    margin-top: 20px;
+    margin-bottom: 10px;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.theme-buttons button {
+    background-color: #3498db;
+}
+
+.theme-buttons button:hover {
+    background-color: #2980b9;
+}
+
+/* --- MODO CLARO --- */
+body.light-mode { background-color: #f4f7f6; color: #333; }
+body.light-mode .navbar { background-color: #ffffff; }
+body.light-mode .navbar li a { color: #34495e; }
+body.light-mode .navbar li a:hover { background-color: #f0f0f0; }
+body.light-mode .navbar li a.active { color: #e62117; border-bottom-color: #e62117; }
+body.light-mode .container { background-color: #ffffff; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1); }
+body.light-mode h1, body.light-mode h2 { color: #2c3e50; }
+body.light-mode #youtubeUrl { background-color: #ffffff; color: #333; border-color: #ccc; }
+body.light-mode .video-wrapper { background-color: #e0e0e0; }
+
+/* --- MODO OSCURO --- */
+body.dark-mode { background-color: #2c3e50; color: #ecf0f1; }
+body.dark-mode .navbar { background-color: #34495e; box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
+body.dark-mode .navbar li a { color: #ecf0f1; }
+body.dark-mode .navbar li a:hover { background-color: #4a627a; }
+body.dark-mode .navbar li a.active { color: #ff554c; border-bottom-color: #ff554c; }
+body.dark-mode .container { background-color: #34495e; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3); }
+body.dark-mode h1, body.dark-mode h2 { color: #ecf0f1; }
+body.dark-mode #youtubeUrl { background-color: #4a627a; color: #ecf0f1; border-color: #5d7a96; }
+body.dark-mode button { background-color: #e62117; color: white; }
+body.dark-mode .theme-buttons button { background-color: #5d7a96; }
+body.dark-mode .theme-buttons button:hover { background-color: #4a627a; }
+body.dark-mode .video-wrapper { background-color: #4a627a; }
+body.dark-mode .feature-card { background-color: #34495e; box-shadow: none; border: 1px solid #4a627a; }
+body.dark-mode .feature-card h3 { color: #ecf0f1; }
+body.dark-mode .feature-card a { color: #ff554c; }
+
+/* --- ESTILOS "GAMER" PARA LA PÁGINA "ACERCA DE" --- */
+body.gamer-theme {
+    background-color: #0f172a; /* Azul muy oscuro */
+    color: #e2e8f0; /* Texto casi blanco */
+    font-family: 'Orbitron', sans-serif;
+}
+.gamer-theme .navbar { background-color: #1e293b; border-bottom: 1px solid #00f5ff; }
+.gamer-theme .navbar li a { color: #e2e8f0; font-family: 'Roboto', sans-serif; }
+.gamer-theme .navbar li a.active { color: #00f5ff; border-bottom-color: #00f5ff; }
+.gamer-theme .container {
+    background: #1e293b;
+    border: 1px solid #00f5ff;
+    box-shadow: 0 0 20px rgba(0, 245, 255, 0.3), inset 0 0 10px rgba(0, 245, 255, 0.2);
+    border-radius: 10px;
+}
+.developer-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.developer-avatar {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    border: 3px solid #00f5ff;
+    box-shadow: 0 0 15px #00f5ff;
+}
+.developer-title h1 {
+    font-family: 'Orbitron', sans-serif;
+    color: #00f5ff;
+    margin: 0;
+    text-shadow: 0 0 5px #00f5ff;
+}
+.developer-title h2 {
+    font-family: 'Roboto', sans-serif;
+    color: #e2e8f0;
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 400;
+}
+.developer-body {
+    text-align: left;
+    margin-top: 30px;
+    font-family: 'Roboto', sans-serif;
+}
+.developer-body h3 {
+    color: #00f5ff;
+    font-family: 'Orbitron', sans-serif;
+    border-bottom: 1px solid #334155;
+    padding-bottom: 5px;
+    margin-bottom: 15px;
+}
+.skills-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.skills-list li {
+    background-color: #334155;
+    padding: 5px 15px;
+    border-radius: 5px;
+    border-left: 3px solid #00f5ff;
+}
+
+/* --- Media Queries Generales --- */
+@media (max-width: 768px) {
+    .navbar ul {
+        flex-direction: column;
+        align-items: center;
+    }
+    .navbar li {
+        width: 100%;
+        text-align: center;
+    }
+    .navbar li a.active {
+        border-bottom: none;
+        border-left: 5px solid #e62117;
+    }
+    body.dark-mode .navbar li a.active { border-left-color: #ff554c; }
+    body.gamer-theme .navbar li a.active { border-left-color: #00f5ff; }
+
+    .hero-content h1 { font-size: 2.5rem; }
+}
+
+@media (max-width: 600px) {
+    .input-group {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    button, #youtubeUrl {
+        width: 100%;
+        max-width: none;
+    }
+    .theme-buttons {
+        flex-direction: column;
+    }
+}
+
+
+
+
+
+
+
+/* Estilos generales para el modo claro */
+        /*body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            <!-Transición suave -->
+            transition: background-color 0.3s ease, color 0.3s ease;  
+        }
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+            <!--Transición suave -->
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;  
+        }*/
+        textarea {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            resize: vertical;
+            min-height: 100px;
+            background-color: #fff;
+            color: #333;
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        select, input[type="range"] {
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            width: calc(100% - 20px);
+            max-width: 480px;
+            box-sizing: border-box;
+            background-color: #fff;
+            color: #333;
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            text-align: left;
+            width: 100%;
+            max-width: 480px;
+            margin-left: 10px;
+        }
+        .controls-group {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            width: 100%;
+            max-width: 480px;
+            margin: 0 auto;
+            margin-bottom: 15px;
+        }
+        .controls-group label {
+            margin-left: 0;
+            width: auto;
+        }
+        .slider-value {
+            font-weight: normal;
+            margin-left: 10px;
+        }
+
+        #theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: #6c757d;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            border: none;
+            transition: background-color 0.3s ease;
+        }
+        #theme-toggle:hover {
+            background-color: #5a6268;
+        }
+
+        /* Estilos para el modo oscuro */
+        body.dark-mode {
+            background-color: #222;
+            color: #f0f0f0;
+        }
+        body.dark-mode .container {
+            background-color: #333;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+        body.dark-mode textarea,
+        body.dark-mode select,
+        body.dark-mode input[type="range"] {
+            background-color: #444;
+            color: #f0f0f0;
+            border-color: #555;
+        }
+        body.dark-mode button {
+            background-color: #555;
+        }
+        body.dark-mode button:hover {
+            background-color: #666;
+        }
+        body.dark-mode #theme-toggle {
+            background-color: #007bff; /* Cambia el color del botón de tema en dark mode */
+        }
+        body.dark-mode #theme-toggle:hover {
+            background-color: #0056b3;
+        }

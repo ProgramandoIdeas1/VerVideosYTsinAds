@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reproductor de Videos de YouTube sin Ads</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Estilos Base */
+        body {
+            font-family: 'Roboto', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0 20px 20px 20px; /* Ajustamos padding para que no afecte a la navbar */
+            box-sizing: border-box;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            justify-content: flex-start; /* Alineamos contenido arriba */
+        }
+
+        /* --- NUEVOS ESTILOS PARA LA BARRA DE NAVEGACIÓN --- */
+        .navbar {
+            width: 100%;
+            background-color: #ffffff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            transition: background-color 0.3s ease;
+        }
+
+        .navbar ul {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            flex-wrap: wrap;
+        }
+
+        .navbar li a {
+            display: block;
+            padding: 15px 20px;
+            text-decoration: none;
+            color: #34495e;
+            font-weight: 700;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .navbar li a:hover {
+            background-color: #f0f0f0;
+        }
+
+        .navbar li a.active {
+            color: #e62117; /* Rojo YouTube para la página activa */
+            border-bottom: 3px solid #e62117;
+            padding-bottom: 12px;
+        }
+
+        .container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 900px;
+            width: 100%;
+            margin-bottom: 20px;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 25px;
+            font-weight: 700;
+            transition: color 0.3s ease;
+        }
+
+        p {
+            transition: color 0.3s ease;
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #youtubeUrl {
+            flex-grow: 1;
+            padding: 12px 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1rem;
+            max-width: 500px;
+            min-width: 250px;
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+
+        button {
+            padding: 12px 25px;
+            background-color: #e62117; /* Rojo YouTube */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease, color 0.3s ease;
+        }
+        button:hover {
+            background-color: #cc180c;
+            transform: translateY(-2px);
+        }
+
+        .video-wrapper {
+            margin-top: 30px;
+            background-color: #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+            display: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .responsive-iframe-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 */
+            height: 0;
+            overflow: hidden;
+        }
+
+        .responsive-iframe-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+        .error-message {
+            color: #e62117;
+            margin-top: 15px;
+            font-weight: bold;
+            display: none;
+        }
+
+        .theme-buttons {
+            margin-top: 20px;
+            margin-bottom: 10px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .theme-buttons button {
+            background-color: #3498db;
+        }
+
+        .theme-buttons button:hover {
+            background-color: #2980b9;
+        }
+
+        /* --- Estilos para Modo Claro --- */
+        body.light-mode {
+            background-color: #f4f7f6;
+            color: #333;
+        }
+        body.light-mode .navbar {
+            background-color: #ffffff;
+        }
+        body.light-mode .navbar li a {
+            color: #34495e;
+        }
+        body.light-mode .navbar li a:hover {
+            background-color: #f0f0f0;
+        }
+        body.light-mode .navbar li a.active {
+            color: #e62117;
+            border-bottom-color: #e62117;
+        }
+        body.light-mode .container {
+            background-color: #ffffff;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+        }
+        body.light-mode h1 {
+            color: #2c3e50;
+        }
+        body.light-mode #youtubeUrl {
+            background-color: #ffffff;
+            color: #333;
+            border-color: #ccc;
+        }
+        body.light-mode .video-wrapper {
+            background-color: #e0e0e0;
+        }
+
+        /* --- Estilos para Modo Oscuro --- */
+        body.dark-mode {
+            background-color: #2c3e50;
+            color: #ecf0f1;
+        }
+        body.dark-mode .navbar {
+            background-color: #34495e;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+        body.dark-mode .navbar li a {
+            color: #ecf0f1;
+        }
+        body.dark-mode .navbar li a:hover {
+            background-color: #4a627a;
+        }
+        body.dark-mode .navbar li a.active {
+            color: #ff554c; /* Un rojo más brillante para el modo oscuro */
+            border-bottom-color: #ff554c;
+        }
+        body.dark-mode .container {
+            background-color: #34495e;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+        body.dark-mode h1 {
+            color: #ecf0f1;
+        }
+        body.dark-mode #youtubeUrl {
+            background-color: #4a627a;
+            color: #ecf0f1;
+            border-color: #5d7a96;
+        }
+        body.dark-mode button {
+            background-color: #e62117;
+            color: white;
+        }
+        body.dark-mode .theme-buttons button {
+            background-color: #5d7a96;
+        }
+        body.dark-mode .theme-buttons button:hover {
+            background-color: #4a627a;
+        }
+        body.dark-mode .video-wrapper {
+            background-color: #4a627a;
+        }
+
+
+        /* Media Queries para Responsividad */
+        @media (max-width: 768px) {
+             .navbar ul {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .navbar li {
+                width: 100%;
+                text-align: center;
+            }
+            .navbar li a.active {
+                border-bottom: none; /* Quitamos el borde inferior en móvil */
+                border-left: 5px solid #e62117; /* Ponemos un borde lateral */
+                padding-bottom: 15px; /* Restauramos el padding */
+            }
+             body.dark-mode .navbar li a.active {
+               border-left-color: #ff554c;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .input-group {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            button, #youtubeUrl {
+                width: 100%;
+                max-width: none;
+            }
+            .theme-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <ul>
+            <li><a href="#" class="active">Inicio</a></li>
+            <li><a href="#">Ver Videos sin Ads</a></li>
+            <li><a href="#">Lector de Texto</a></li>
+            <li><a href="#">Acerca de</a></li>
+        </ul>
+    </nav>
+    <div class="container">
+        <h1>WatsonPI & Programando Ideas</h1>
+        <h2>Reproductor de Videos de YouTube sin Ads</h2>
+        <p>Introduce la URL completa de un video de YouTube para verlo aquí.</p>
+
+        <div class="input-group">
+            <input type="text" id="youtubeUrl" placeholder="Ej: https://www.youtube.com/watch?v=VIDEO_ID">
+            <button onclick="loadVideo()">Cargar Video</button>
+        </div>
+
+        <p class="error-message" id="errorMessage"></p>
+
+        <div class="video-wrapper" id="videoWrapper">
+            <div class="responsive-iframe-container">
+                <iframe id="youtubePlayer"
+                        src=""
+                        title="Video de YouTube"
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        referrerpolicy="strict-origin-when-cross-origin"
+                        allowfullscreen>
+                </iframe>
+            </div>
+        </div>
+
+        <div class="theme-buttons">
+            <button onclick="setTheme('light')">Modo Claro</button>
+            <button onclick="setTheme('dark')">Modo Oscuro</button>
+        </div>
+    </div>
+
+    <script>
+        // --- Lógica del Reproductor de YouTube (sin cambios) ---
+        function getYoutubeVideoId(url) {
+            const regex = /(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+            const match = url.match(regex);
+            return (match && match[1]) ? match[1] : null;
+        }
+
+        function loadVideo() {
+            const urlInput = document.getElementById('youtubeUrl');
+            const youtubePlayer = document.getElementById('youtubePlayer');
+            const videoWrapper = document.getElementById('videoWrapper');
+            const errorMessage = document.getElementById('errorMessage');
+            const url = urlInput.value.trim();
+
+            errorMessage.style.display = 'none';
+            videoWrapper.style.display = 'none';
+
+            if (url === "") {
+                errorMessage.textContent = "Por favor, introduce una URL de YouTube.";
+                errorMessage.style.display = 'block';
+                return;
+            }
+
+            const videoId = getYoutubeVideoId(url);
+
+            if (videoId) {
+                // Usamos youtube-nocookie.com para mayor privacidad y evitar algunos anuncios
+                const embedUrl = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1`;
+                youtubePlayer.src = embedUrl;
+                videoWrapper.style.display = 'block';
+                urlInput.value = '';
+            } else {
+                errorMessage.textContent = "La URL introducida no es un enlace de YouTube válido. Asegúrate de que sea una URL de video completa.";
+                errorMessage.style.display = 'block';
+                youtubePlayer.src = "";
+            }
+        }
+
+        // --- Lógica para el Tema (Dark/Light Mode) ---
+
+        function setTheme(themeName) {
+            document.body.className = themeName + '-mode';
+            localStorage.setItem('theme', themeName);
+        }
+
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                setTheme(savedTheme);
+            } else {
+                if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    setTheme('dark');
+                } else {
+                    setTheme('light');
+                }
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', loadTheme);
+
+    </script>
+</body>
+</html>

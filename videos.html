@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reproductor de Videos - WatsonPI & Programando Ideas</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body class="light-mode">
+
+    <nav class="navbar">
+        <ul>
+            <li><a href="index.html">Inicio</a></li>
+            <li><a href="videos.html" class="active">Ver Videos sin Ads</a></li>
+            <li><a href="lector.html">Lector de Texto</a></li>
+            <li><a href="acerca.html">Acerca de</a></li>
+        </ul>
+    </nav>
+
+    <div class="container page-container">
+        <h1>WatsonPI & Programando Ideas</h1>
+        <h2>Reproductor de Videos de YouTube sin Ads</h2>
+        <p>Introduce la URL completa de un video de YouTube para verlo aquí.</p>
+
+        <div class="input-group">
+            <input type="text" id="youtubeUrl" placeholder="Pega aquí la URL del video de YouTube">
+            <button onclick="loadVideo()">Cargar Video</button>
+        </div>
+
+        <p class="error-message" id="errorMessage"></p>
+
+        <div class="video-wrapper" id="videoWrapper">
+            <div class="responsive-iframe-container">
+                <iframe id="youtubePlayer" src="" title="Video de YouTube" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
+                </iframe>
+            </div>
+        </div>
+
+        <div class="theme-buttons">
+            <button onclick="setTheme('light')">Modo Claro ☀️</button>
+            <button onclick="setTheme('dark')">Modo Oscuro 🌙</button>
+        </div>
+    </div>
+
+    <script src="js/theme-switcher.js"></script>
+    <script>
+        // Lógica del reproductor de video
+        function getYoutubeVideoId(url) {
+            const regex = /(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+            const match = url.match(regex);
+            return (match && match[1]) ? match[1] : null;
+        }
+
+        function loadVideo() {
+            const urlInput = document.getElementById('youtubeUrl');
+            const youtubePlayer = document.getElementById('youtubePlayer');
+            const videoWrapper = document.getElementById('videoWrapper');
+            const errorMessage = document.getElementById('errorMessage');
+            const url = urlInput.value.trim();
+
+            errorMessage.style.display = 'none';
+            videoWrapper.style.display = 'none';
+
+            if (url === "") {
+                errorMessage.textContent = "Por favor, introduce una URL de YouTube.";
+                errorMessage.style.display = 'block';
+                return;
+            }
+
+            const videoId = getYoutubeVideoId(url);
+
+            if (videoId) {
+                const embedUrl = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1`;
+                youtubePlayer.src = embedUrl;
+                videoWrapper.style.display = 'block';
+                urlInput.value = '';
+            } else {
+                errorMessage.textContent = "La URL introducida no es un enlace de YouTube válido.";
+                errorMessage.style.display = 'block';
+                youtubePlayer.src = "";
+            }
+        }
+    </script>
+</body>
+</html>
